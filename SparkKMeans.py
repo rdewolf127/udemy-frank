@@ -23,12 +23,14 @@ def createClusteredData(N, k):
     X = array(X)
     return X
 
+random.seed(0)
+
 # Load the data; note I am normalizing it with scale() - very important!
 data = sc.parallelize(scale(createClusteredData(100, K)))
 
 # Build the model (cluster the data)
 clusters = KMeans.train(data, K, maxIterations=10,
-        runs=10, initializationMode="random")
+        initializationMode="random")
 
 # Print out the cluster assignments
 resultRDD = data.map(lambda point: clusters.predict(point)).cache()
@@ -53,4 +55,5 @@ print("Within Set Sum of Squared Error = " + str(WSSSE))
 # Things to try:
 # What happens to WSSSE as you increase or decrease K? Why?
 # What happens if you don't normalize the input data before clustering?
-# What happens if you change the maxIterations or runs parameters?
+# What happens if you change the maxIterations parameter?
+# What happens if you change initializationMode to "k-means||"
